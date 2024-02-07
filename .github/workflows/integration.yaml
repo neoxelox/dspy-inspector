@@ -1,0 +1,30 @@
+name: Integration
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Python 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "poetry"
+
+      - name: Setup Scripts 🧩
+        run: |
+          poetry install
+          inv env.switch ci
+          inv tool.install ci-int --yes
+
+      - name: Lint 🪶
+        run: inv lint
+
+      - name: Test 🧪
+        run: inv test
