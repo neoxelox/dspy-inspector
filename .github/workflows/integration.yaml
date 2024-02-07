@@ -23,11 +23,11 @@ jobs:
       - name: Setup Scripts 🧩
         run: |
           poetry install
-          inv env.switch ci
-          inv tool.install ci-int --yes
+          poetry run inv env.switch ci
+          poetry run inv tool.install ci-int --yes
 
       - name: Lint 🪶
-        run: inv lint
+        run: poetry run inv lint
 
       - name: Test 🧪
-        run: inv test
+        run: poetry run inv test
