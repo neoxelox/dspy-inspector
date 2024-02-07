@@ -30,11 +30,11 @@ jobs:
       - name: Setup Scripts 🧩
         run: |
           poetry install
-          inv env.switch ci
-          inv tool.install ci-dep --yes
+          poetry run inv env.switch ci
+          poetry run inv tool.install ci-dep --yes
 
       - name: Build 🏗️
-        run: inv build
+        run: poetry run inv build
 
       - name: Publish 🚀
-        run: inv publish
+        run: poetry run inv publish
