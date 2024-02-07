@@ -71,6 +71,5 @@ def publish(context):
     else:
         context.info(f"Version tag already set: {version}")
 
-    context.info("Refreshing golang module registry cache")
-
-    context.run(f"{Tools.Poetry} publish -r pypi")
+    context.run(f"{Tools.Poetry} config pypi-token.pypi $PYPI_TOKEN")
+    context.run(f"{Tools.Poetry} publish")
