@@ -71,5 +71,5 @@ def publish(context):
     else:
         context.info(f"Version tag already set: {version}")
 
-    context.run(f"{Tools.Poetry} config pypi-token.pypi $PYPI_TOKEN")
+    context.run(f"{Tools.Poetry} config pypi-token.pypi \$PYPI_TOKEN")
     context.run(f"{Tools.Poetry} publish")
