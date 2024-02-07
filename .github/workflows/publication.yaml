@@ -38,3 +38,5 @@ jobs:
 
       - name: Publish 🚀
         run: poetry run inv publish
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
