@@ -53,7 +53,7 @@ jobs = "auto"
 exclude = ["**/__pycache__/*", "**/__init__.py"]
 
 [tool.flakehell.plugins]
-"flake8-black" = ["+*"]
+"flake8-black" = ["+*", "-BLK999"]
 "flake8-isort" = ["+*"]
 mccabe = ["+*"]
 pycodestyle = ["+*", "-W0621", "-E203", "-E1101", "-W503"]
