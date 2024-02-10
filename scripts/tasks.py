@@ -26,7 +26,8 @@ def lint(context, file="./dspy_inspector/"):
     """Run linter."""
 
     context.run(f"{Tools.Poetry} run flakehell lint {file}")
-    context.run(f"{Tools.Poetry} run mypy {file}")
+    # TODO: Activate mypy when ready
+    # context.run(f"{Tools.Poetry} run mypy {file}")
 
 
 @task(

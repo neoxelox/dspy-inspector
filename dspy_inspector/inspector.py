@@ -1,17 +1,17 @@
-import ipycytoscape as cytoscape
-import ipywidgets as widgets
-import dspy
-import dsp
-from pprint import pprint
+import html
 import inspect
+import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, List, Tuple, Optional, Dict, Callable
-import tiktoken
 from functools import partial
-import os
-from threading import Timer
-import html
+from pprint import pprint
+from typing import Callable, List, Optional, Tuple
+
+import dsp
+import dspy
+import ipycytoscape as cytoscape
+import ipywidgets as widgets
+import tiktoken
 
 with open(os.path.join(os.path.dirname(__file__), "styles.css"), "r") as file:
     _styles_css = file.read()
@@ -197,7 +197,7 @@ class Inspector:
                 "height": "2em",
                 "shape": "round-rectangle",
                 "background-color": "blue",
-                "font-family": 'BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif',
+                "font-family": 'BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif',  # noqa: E501
                 "font-size": "1em",
                 "label": "data(label)",
                 "color": "purple",
@@ -376,7 +376,7 @@ class Inspector:
     <div><span>type</span><span data-type-{node.type}>{node.type}</span></div>
     <div><span>variable</span><span data-variable>{node.variable}</span></div>
 </div>
-"""
+"""  # noqa: E501
 
         def _draw_parameter_panel_info_widget(parameter: ParameterNode) -> str:
             return f"""
@@ -386,7 +386,7 @@ class Inspector:
 <div><dt>Format</dt><dd>{parameter.format.__name__ if parameter.format else 'None'}</dd></div>
 <div><dt>Value</dt><dd>{html.escape(parameter.value.text) if parameter.value else 'None'}</dd></div>
 <div><dt>Tokens</dt><dd>{parameter.value.tokens if parameter.value else '0'}</dd></div>
-"""
+"""  # noqa: E501
 
         def _draw_predictor_panel_info_widget(predictor: PredictorNode) -> str:
             return f"""
@@ -398,7 +398,7 @@ class Inspector:
 <div><dt>Demos</dt><dd>{[f'{html.escape(demo)}<br/><br/>' for demo in predictor.demos] if predictor.demos else 'None'}</dd></div>
 <div><dt>Model</dt><dd>{predictor.model.name}</dd></div>
 <div><dt>Settings</dt><dd>{predictor.model.settings}</dd></div>
-"""
+"""  # noqa: E501
 
         def _draw_retriever_panel_info_widget(retriever: RetrieverNode) -> str:
             return f"""
@@ -407,13 +407,13 @@ class Inspector:
 <div><dt>Tokens</dt><dd>Input: {retriever.usage.input_tokens} | Output: {retriever.usage.output_tokens}</dd></div>
 <div><dt>Model</dt><dd>{retriever.model.name}</dd></div>
 <div><dt>Settings</dt><dd>{retriever.model.settings}</dd></div>
-"""
+"""  # noqa: E501
 
         def _draw_program_panel_info_widget(program: ProgramNode) -> str:
             return f"""
 <div><dt>Compiled</dt><dd>{program.compiled}</dd></div>
 <div><dt>Subprogram</dt><dd>{program.parent is not None}</dd></div>
-"""
+"""  # noqa: E501
 
         def _update_graph() -> None:
             if self.debug:
