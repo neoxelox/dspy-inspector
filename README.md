@@ -1,6 +1,8 @@
-# dspy-inspector 🔍
+# dspy-inspector 🔍 ![Beta](https://img.shields.io/badge/beta-f97316)
 
 **`DSPy program/pipeline inspector widget for Jupyter/VSCode Notebook.`** 🔭
+
+TODO: GIF
 
 ## Install
 
@@ -10,11 +12,11 @@
 
 TODO: Explain
 
-## Features
-
-TODO: Explain
+TODO: Features
 
 ## Usage
+
+> **NOTE**: TODO: Explain that the examples notebooks are cached so no calls to OpenAI are necessary to try the inspector
 
 TODO: Explain
 
@@ -23,7 +25,9 @@ TODO: Explain
 To setup the virtual environment, follow these steps:
 
 1. Install dependencies: `poetry install`
-2. Install tools `poetry run inv tool.install --include "dev*"`
+2. Install tools: `poetry run inv tool.install --include "dev*"`
+3. Create kernel: `poetry run python -m ipykernel install --user --name dspy-inspector --display-name "DSPy Inspector"`
+4. Select `dspy-inspector` kernel in all notebooks
 
 Run `poetry run inv help` for further commands and `poetry run inv <command> --help` for their usage.
 

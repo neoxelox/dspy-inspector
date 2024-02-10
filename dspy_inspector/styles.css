@@ -1,0 +1,226 @@
+.dspy-inspector {
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
+  font-synthesis: none !important;
+  text-rendering: optimizelegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  -webkit-text-size-adjust: 100% !important;
+     -moz-text-size-adjust: 100% !important;
+          text-size-adjust: 100% !important;
+  -webkit-tap-highlight-color: transparent !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+  color: #032830 !important;
+  background-color: #ffffff !important;
+  background-image: radial-gradient(#e2e8f0 1.55px, #ffffff 1.6px) !important;
+  background-size: 24px 24px !important;
+  border-radius: 0em !important;
+  height: 400px !important;
+  max-height: 400px !important;
+  min-height: 400px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  /* VERSION TAG */
+  /* ----------- */
+  /* OVERRIDES */
+  /* --------- */
+}
+.dspy-inspector h1,
+.dspy-inspector h2,
+.dspy-inspector h3,
+.dspy-inspector h4,
+.dspy-inspector h5,
+.dspy-inspector p {
+  margin: 0em !important;
+  padding: 0em !important;
+}
+.dspy-inspector::after {
+  position: absolute;
+  bottom: 1em;
+  left: 1em;
+  content: "BETA";
+  z-index: 30;
+  font-size: 1em;
+  font-weight: 400;
+  color: #ffffff;
+  background-color: #8b5cf6;
+  opacity: 75%;
+  margin: 0em;
+  padding: 0em 0.5em 0.25em 0.5em;
+  line-height: 1.5em;
+  border-radius: 0.3em;
+}
+.dspy-inspector .custom-widget {
+  background-color: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
+  resize: none !important;
+  z-index: 10 !important;
+}
+.dspy-inspector .custom-widget:hover {
+  border: none;
+}
+.dspy-inspector-panel {
+  width: 40% !important;
+  height: 90% !important;
+  overflow: hidden !important;
+  z-index: 20 !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  right: 1% !important;
+  background-color: #fafafa !important;
+  border-radius: 1em !important;
+  border: 2px solid #e7e5e4 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+  margin: 0em !important;
+  padding: 1em 1em 0em 1em !important;
+  display: grid !important;
+  grid-template-rows: 93% 7% !important;
+}
+.dspy-inspector-panel-info {
+  width: 100% !important;
+  height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important;
+}
+.dspy-inspector-panel-info-node {
+  width: 100%;
+  height: auto;
+  padding-bottom: 1em;
+  position: sticky;
+  top: 0;
+  background-color: #fafafa;
+  border-bottom: 2px solid #e7e5e4;
+}
+.dspy-inspector-panel-info-node-title {
+  width: 100%;
+  height: auto;
+}
+.dspy-inspector-panel-info-node-title h1 {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.dspy-inspector-panel-info-node-subtitle {
+  width: 100%;
+  height: auto;
+}
+.dspy-inspector-panel-info-node-subtitle h2 {
+  font-size: 1.25em;
+  font-weight: 500;
+}
+.dspy-inspector-panel-info-node-tags {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  -moz-column-gap: 0.75em;
+       column-gap: 0.75em;
+}
+.dspy-inspector-panel-info-node-tags div span:first-child {
+  font-size: 1em;
+  font-weight: 400;
+  color: #032830;
+  background-color: #edeceb;
+  margin: 0em;
+  padding: 0em 0.5em 0.25em 0.5em;
+  line-height: 1.5em;
+  border-top-left-radius: 0.3em;
+  border-bottom-left-radius: 0.3em;
+}
+.dspy-inspector-panel-info-node-tags div span:last-child {
+  font-size: 1em;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0em;
+  padding: 0em 0.5em 0.25em 0.5em;
+  line-height: 1.5em;
+  border-top-right-radius: 0.3em;
+  border-bottom-right-radius: 0.3em;
+}
+.dspy-inspector-panel-info-node-tags div span:last-child[data-type-parameter] {
+  background-color: #a8a29e;
+}
+.dspy-inspector-panel-info-node-tags div span:last-child[data-type-predictor] {
+  background-color: #10b981;
+}
+.dspy-inspector-panel-info-node-tags div span:last-child[data-type-retriever] {
+  background-color: #eab308;
+}
+.dspy-inspector-panel-info-node-tags div span:last-child[data-type-program] {
+  background-color: #8b5cf6;
+}
+.dspy-inspector-panel-info-node-tags div span:last-child[data-variable] {
+  background-color: #0ea5e9;
+}
+.dspy-inspector-panel-info-table {
+  width: 100%;
+  height: auto;
+  background-color: #fafafa;
+}
+.dspy-inspector-panel-info-table dl {
+  padding: 0em;
+  margin: 0em;
+}
+.dspy-inspector-panel-info-table dl div {
+  border-top: 1px solid #e7e5e4;
+  padding: 1.5em 0.75em;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1em;
+}
+.dspy-inspector-panel-info-table dl div:first-child {
+  border-top: none;
+}
+.dspy-inspector-panel-info-table dl div:nth-child(2n) {
+  background-color: #f3f2f2;
+}
+.dspy-inspector-panel-info-table dl div:last-child {
+  border-bottom-left-radius: 0.6em;
+  border-bottom-right-radius: 0.6em;
+}
+.dspy-inspector-panel-info-table dl div dt {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.5em;
+  color: #032830;
+}
+.dspy-inspector-panel-info-table dl div dd {
+  margin: 0;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5em;
+  color: #032830;
+  grid-column: span 2/span 2;
+}
+.dspy-inspector-panel-actions {
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+  height: 100% !important;
+  margin: 0em !important;
+  padding: 0em !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  transform: translate(1.1em, 0.15em) !important;
+  border-top-left-radius: 0.3em !important;
+}
+.dspy-inspector-panel-actions button {
+  margin: 0em !important;
+  padding: 0em 10px !important;
+  color: #032830 !important;
+  background-color: #fafafa !important;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.1) !important;
+  border: none !important;
+  display: inline-block;
+  box-sizing: border-box !important;
+}
+.dspy-inspector-panel-actions button:focus:enabled {
+  outline: none !important;
+}
+.dspy-inspector-panel-actions button.mod-danger {
+  color: #ffffff !important;
+  background-color: #f43f5e !important;
+}/*# sourceMappingURL=styles.css.map */
