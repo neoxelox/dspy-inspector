@@ -54,7 +54,7 @@ class Node:
     type: Type
     metadata: dict
     dspy_instance: object
-    cyto_instance: object
+    cyto_instance: cytoscape.Node
 
 
 @dataclass
@@ -250,11 +250,10 @@ class Inspector:
             },
         },
         {
-            "selector": "node[type='program'][parent]",
+            "selector": "node[type='program']",
             "style": {
                 "background-opacity": 0,
                 "color": Color.violet_content,
-                "border-width": "0.05em",
                 "border-style": "dashed",
                 "border-color": Color.violet_background,
                 "font-size": "1.25em",
@@ -264,16 +263,15 @@ class Inspector:
             },
         },
         {
+            "selector": "node[type='program'][parent]",
+            "style": {
+                "border-width": "0.05em",
+            },
+        },
+        {
             "selector": "node[type='program'][^parent]",
             "style": {
-                "background-opacity": 0,
-                "color": Color.violet_content,
-                "border-style": "dashed",
-                "border-color": Color.violet_background,
-                "font-size": "1.25em",
-                "text-valign": "top",
-                "text-halign": "center",
-                "text-margin-y": "-1em",
+                "border-width": "0em",
             },
         },
         {
@@ -304,19 +302,24 @@ class Inspector:
                 "border-width": "0em",
             },
         },
-        {
+        {  # TODO: Make edges curve clockwise or anticlockwise to be always on the outside
             "selector": "edge",
             "style": {
                 "curve-style": "unbundled-bezier",
-                "width": "0.1em",
+                "width": "0.075em",
                 "line-color": Color.edge,
-                "arrow-scale": "1",
+                "arrow-scale": "0.75",
                 "target-arrow-shape": "circle",
                 "target-arrow-color": Color.edge,
-                "target-arrow-width": "7em",
-                "target-endpoint": "50% 0% 90deg",
-                "source-endpoint": "50% 100% 90deg",
-                "z-index": 99,
+                "target-arrow-width": "1em",
+                "source-endpoint": "180deg",
+                "target-endpoint": "0deg",
+            },
+        },
+        {
+            "selector": "edge[hidden]",
+            "style": {
+                "visibility": "hidden",
             },
         },
         {
@@ -342,7 +345,7 @@ class Inspector:
 
         graph_widget = cytoscape.CytoscapeWidget()
         graph_widget.set_style(self._graph_widget_style)
-        graph_widget.set_layout(name="dagre", directed=True, animate=True, nodeSpacing=10, edgeLengthVal=10)
+        graph_widget.set_layout(name="dagre", directed=True, animate=True, nodeSpacing=10, edgeLengthVal=5)
 
         style_widget = widgets.HTML(self._panel_widget_style)
 
@@ -405,26 +408,34 @@ class Inspector:
                     cytoscape_graph["nodes"].extend(
                         [
                             {
-                                "id": node.id,
+                                "id": f"{node.id}-outer",
                                 "type": node.type,
                                 **({"parent": node.parent} if node.parent else {}),
                             },
                             {
-                                "id": f"{node.id}-inner",
+                                "id": node.id,
                                 "type": node.type,
                                 "label": node.label,
-                                "parent": node.id,
+                                "parent": f"{node.id}-outer",
                                 "inner": True,
                             },
                         ]
                     )
 
+            # A hack to make edges endpoints be outside of compound nodes without breaking the layout
             for edge in graph["edges"]:
-                cytoscape_graph["edges"].append(
-                    {
-                        "source": edge.source,
-                        "target": edge.target,
-                    }
+                cytoscape_graph["edges"].extend(
+                    [
+                        {
+                            "source": edge.source,
+                            "target": edge.target,
+                            "hidden": True,
+                        },
+                        {
+                            "source": f"{edge.source}-outer",
+                            "target": f"{edge.target}-outer",
+                        },
+                    ]
                 )
 
             graph_widget.graph.clear()
@@ -433,7 +444,9 @@ class Inspector:
             # TODO: Replace this quadratic for...
             for cyto_node in graph_widget.graph.nodes:
                 for node in graph["nodes"]:
-                    if cyto_node.data["id"] == node.id:
+                    if cyto_node.data["id"] == f"{node.id}-outer" or (
+                        node.type == Node.Type.PROGRAM and cyto_node.data["id"] == node.id
+                    ):
                         node.cyto_instance = cyto_node
 
         def _draw_node_panel_info_widget(node: Node) -> str:
@@ -530,7 +543,7 @@ class Inspector:
 """
 
         def _graph_widget_on_node_click(event: dict) -> None:
-            node_id = event["data"]["id"].split("-inner")[0]
+            node_id = event["data"]["id"].split("-outer")[0]
             node = next(filter(lambda node: node.id == node_id, graph["nodes"]), None)
             if node:
                 _select_node(node)
