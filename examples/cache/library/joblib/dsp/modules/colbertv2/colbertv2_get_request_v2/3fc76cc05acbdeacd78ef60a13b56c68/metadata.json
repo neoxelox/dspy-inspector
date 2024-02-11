@@ -1,0 +1,1 @@
+{"duration": 0.2523372173309326, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT birthplace FROM musicians WHERE nationality = 'Senegal' AND name = 'Diogal Sakho'\"", "k": "2"}, "time": 1707662606.559226}

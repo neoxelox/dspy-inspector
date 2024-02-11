@@ -1,28 +1,41 @@
-# dspy-inspector 🔍 ![Beta](https://img.shields.io/badge/beta-f97316)
+# dspy-inspector 🔍 ![BETA](https://img.shields.io/badge/BETA-8b5cf6)
 
-**`DSPy program/pipeline inspector widget for Jupyter/VSCode Notebook.`** 🔭
+**`DSPy program/pipeline inspector widget for Jupyter/VSCode Notebooks.`** 🔭
 
-TODO: GIF
+![Demo](demo.gif)
+
+> Dark theme is coming soon™.
 
 ## Install
 
 👉 `pip install dspy-inspector`
 
-## What
-
-TODO: Explain
-
-TODO: Features
-
 ## Usage
 
-> **NOTE**: TODO: Explain that the examples notebooks are cached so no calls to OpenAI are necessary to try the inspector
+```python
+from dspy_inspector import inspect
 
-TODO: Explain
+class MultiHopRAG(dspy.Module):
+    def __init__(self, passages_per_hop=3, max_hops=2):
+        ...
+
+    def forward(self, question):
+        ...
+
+inspect(MultiHopRAG)
+```
+
+Check an example in the [`multi_hop_rag.ipynb`](examples/multi_hop_rag.ipynb) notebook.
+
+> All example notebooks are cached, no calls to LLMs are needed to run them.
+
+## Roadmap
+
+This is a personal project I made to better understand what were my DSPy programs actually doing underneath. This extension is currently in **`BETA`**, so, expect bugs. For a roadmap on what things must be fixed or done check all the `TODOs` inside the source code.
 
 ## Developing
 
-To setup the virtual environment, follow these steps:
+To setup the virtual developing environment, follow these steps:
 
 1. Install dependencies: `poetry install`
 2. Install tools: `poetry run inv tool.install --include "dev*"`

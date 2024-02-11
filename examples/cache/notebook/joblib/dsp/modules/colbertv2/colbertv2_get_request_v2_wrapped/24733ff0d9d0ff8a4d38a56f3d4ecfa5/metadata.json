@@ -1,0 +1,1 @@
+{"duration": 0.23912811279296875, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT * FROM [2017 NHL Expansion Draft] WHERE [Player] = 'Marc-Andre Fleury' AND [Team] = 'Vegas Golden Knights' AND [Year] = '2017' AND [Draft Conducted By] = 'National Hockey League'\", 3]"}, "time": 1707662526.839423}

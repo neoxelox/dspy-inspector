@@ -1,0 +1,1 @@
+{"duration": 0.2374110221862793, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT * FROM LTWA WHERE title = 'Who Put the Bomp' OR title = 'Self' ORDER BY date_published DESC LIMIT 1;\", 2]"}, "time": 1707662538.156267}

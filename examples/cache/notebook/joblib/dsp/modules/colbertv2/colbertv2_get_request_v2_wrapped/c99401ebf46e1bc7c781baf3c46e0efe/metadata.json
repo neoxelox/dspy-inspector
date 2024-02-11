@@ -1,0 +1,1 @@
+{"duration": 0.24315214157104492, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT * FROM umpires WHERE country = 'Pakistan' AND ICC_umpire_of_the_year = 'Yes' AND ICC_World_Twenty20_participant = 'Yes'\", 2]"}, "time": 1707662588.7764611}

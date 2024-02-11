@@ -1,0 +1,1 @@
+{"duration": 0.24167799949645996, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT artist FROM albums WHERE title = 'At My Window' AND genre = 'Folk/Country' AND year = 1987 AND studio_album = 'Yes'\", 2]"}, "time": 1707662530.256586}

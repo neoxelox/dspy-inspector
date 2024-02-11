@@ -1,0 +1,1 @@
+{"duration": 0.23899078369140625, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT code_name FROM engagements WHERE location = 'Eastern Front' AND war = 'Second World War' AND division = '102nd Infantry Division' AND type = 'German offensive'\"", "k": "2"}, "time": 1707662568.219111}

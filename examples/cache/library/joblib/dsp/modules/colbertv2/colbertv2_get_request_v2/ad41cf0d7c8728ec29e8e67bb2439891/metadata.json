@@ -1,0 +1,1 @@
+{"duration": 0.2523982524871826, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT destination FROM space_tourists WHERE nationality = 'Italian' AND gender = 'female' AND destination = (SELECT destination FROM space_tourists WHERE nationality = 'South African' AND occupation = 'entrepreneur')\"", "k": "2"}, "time": 1707662580.101632}

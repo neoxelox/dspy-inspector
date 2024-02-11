@@ -1,0 +1,1 @@
+{"duration": 0.2388291358947754, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', 'SELECT * FROM actresses WHERE film_debut = 1995 AND film_title = \"Kids\" AND co_founder = \"Voto Latino\"', 2]"}, "time": 1707662560.41872}

@@ -1,0 +1,1 @@
+{"duration": 0.3720283508300781, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT outfield_type FROM Dodgers WHERE player_name = 'Eric Davis' AND foot_speed = 'excellent' AND bat_speed = 'excellent'\", 2]"}, "time": 1707662584.371864}

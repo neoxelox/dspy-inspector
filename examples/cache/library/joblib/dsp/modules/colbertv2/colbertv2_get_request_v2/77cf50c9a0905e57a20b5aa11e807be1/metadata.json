@@ -1,0 +1,1 @@
+{"duration": 0.27251100540161133, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "'SELECT (YEAR(Aleksandr Danilovich Aleksandrov) - YEAR(Anatoly Fomenko)) AS age_difference FROM Russian_Individuals WHERE Aleksandr Danilovich Aleksandrov IS NOT NULL AND Anatoly Fomenko IS NOT NULL'", "k": "2"}, "time": 1707662602.410057}

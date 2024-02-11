@@ -1,0 +1,1 @@
+{"duration": 0.24038982391357422, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "'SELECT company FROM films WHERE title = \"The Many Adventures of Winnie the Pooh\" AND production_company = \"Walt Disney Productions\" AND song_writers = \"Sherman Brothers\"'", "k": "2"}, "time": 1707662575.9938838}

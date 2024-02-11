@@ -1,0 +1,1 @@
+{"duration": 0.24114322662353516, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', 'SELECT YEAR FROM International Year of Youth WHERE Organization = Community Benefits Agreement AND Year = 2009', 2]"}, "time": 1707662593.623935}

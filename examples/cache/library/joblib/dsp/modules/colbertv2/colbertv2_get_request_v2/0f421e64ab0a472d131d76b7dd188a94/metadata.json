@@ -1,0 +1,1 @@
+{"duration": 0.25168371200561523, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "'SELECT actor_name FROM \"Torchwood\" WHERE series = 4 AND country = \"USA\" AND guest_star = \"Candace Kita\"'", "k": "2"}, "time": 1707662534.373352}

@@ -1,0 +1,1 @@
+{"duration": 0.2404019832611084, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT MAX(height) FROM buildings WHERE city = 'New York City' AND (name = 'Empire State Building' OR name = 'Bank of America Tower') AND (year_completed = 1931 OR year_completed = 2009)\", 2]"}, "time": 1707662554.381248}

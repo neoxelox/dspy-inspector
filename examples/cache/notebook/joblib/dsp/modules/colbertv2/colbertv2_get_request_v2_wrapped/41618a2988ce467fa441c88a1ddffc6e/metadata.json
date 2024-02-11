@@ -1,0 +1,1 @@
+{"duration": 0.24107027053833008, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', 'SELECT company FROM films WHERE title = \"The Many Adventures of Winnie the Pooh\" AND production_company = \"Walt Disney Productions\" AND song_writers = \"Sherman Brothers\"', 2]"}, "time": 1707662575.9944801}

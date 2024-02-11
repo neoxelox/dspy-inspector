@@ -1,0 +1,1 @@
+{"duration": 0.23973703384399414, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "'SELECT name FROM actors WHERE film = \"Tombstone\" AND birthdate = \"May 17, 1955\" AND nationality = \"American\" AND (credited_name = \"Julio Oscar Mechoso\" OR credited_name = \"Julio Mechoso\")'", "k": "2"}, "time": 1707662564.4695559}

@@ -1,0 +1,1 @@
+{"duration": 0.25371217727661133, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', 'SELECT record_label FROM albums WHERE album_name = \"Everything Has Changed\" AND artist = \"Randy Crawford\" AND release_year = 1976 AND recording_studio = \"Hollywood Sound Recorders\"', 2]"}, "time": 1707662597.4108958}

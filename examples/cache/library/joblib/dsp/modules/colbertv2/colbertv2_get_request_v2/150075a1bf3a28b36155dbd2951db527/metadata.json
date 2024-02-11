@@ -1,0 +1,1 @@
+{"duration": 0.24301385879516602, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "'SELECT record_label FROM albums WHERE title = \"Everything Has Changed\"'", "k": "2"}, "time": 1707662595.73264}

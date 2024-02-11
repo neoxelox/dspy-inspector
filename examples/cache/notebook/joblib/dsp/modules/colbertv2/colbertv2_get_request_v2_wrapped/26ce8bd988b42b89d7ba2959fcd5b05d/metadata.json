@@ -1,0 +1,1 @@
+{"duration": 0.26367712020874023, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT year FROM [1] WHERE league = 'Premier League' AND cup = 'FA Cup' AND year = 1972\", 2]"}, "time": 1707662551.312598}

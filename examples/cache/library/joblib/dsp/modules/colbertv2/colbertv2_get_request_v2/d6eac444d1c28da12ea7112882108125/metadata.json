@@ -1,0 +1,1 @@
+{"duration": 0.23830795288085938, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT actor_name FROM guest_stars WHERE show_name = 'Candace Kita' AND nationality = 'American'\"", "k": "2"}, "time": 1707662532.547505}

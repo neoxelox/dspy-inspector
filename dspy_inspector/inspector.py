@@ -500,7 +500,7 @@ class Inspector:
 
             _draw_graph_widget()
 
-        def _select_node(node: Node) -> None:
+        def _select_node(node: Node, force: bool = False) -> None:
             nonlocal selected_node
 
             if self.debug:
@@ -509,7 +509,7 @@ class Inspector:
             if selected_node:
                 selected_node.cyto_instance.classes = ""
 
-                if selected_node.id == node.id:
+                if selected_node.id == node.id and not force:
                     selected_node = None
                     return
 
@@ -808,8 +808,9 @@ class Inspector:
                 _update_parameters(this, parameters, nodes, edges)
                 _update_program(this)
                 if not parent:  # Only update graph once after root program finishes
-                    _update_graph()
-                    _select_node(selected_node)
+                    # _update_graph() # TODO: Fix graph layout breaks when updating it twice
+                    if selected_node:
+                        _select_node(selected_node, force=True)
                 return result
 
             setattr(program, "forward", wrap_forward)
@@ -828,6 +829,6 @@ class Inspector:
         # Initial graph update
         graph["nodes"], graph["edges"] = _parse_program(program.__class__.__name__.lower(), program)
         _update_graph()
-        _select_node(graph["nodes"][0])
+        _select_node(graph["nodes"][0], force=True)
 
         return inspector_widget

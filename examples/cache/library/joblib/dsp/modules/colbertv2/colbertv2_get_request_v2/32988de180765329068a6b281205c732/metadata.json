@@ -1,0 +1,1 @@
+{"duration": 0.2515718936920166, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT magazine FROM publications WHERE author = 'Scott Shaw' AND (magazine = 'Tae Kwon Do Times' OR magazine = 'Southwest Art')\"", "k": "2"}, "time": 1707662546.765465}

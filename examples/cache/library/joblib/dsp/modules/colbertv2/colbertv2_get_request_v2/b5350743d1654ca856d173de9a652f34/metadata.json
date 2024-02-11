@@ -1,0 +1,1 @@
+{"duration": 0.24209904670715332, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT name FROM actors WHERE role = 'Ophelia' AND production = 'Royal Shakespeare Company' AND name IN (SELECT name FROM actors WHERE film = 'The Shore')\"", "k": "2"}, "time": 1707662571.971894}

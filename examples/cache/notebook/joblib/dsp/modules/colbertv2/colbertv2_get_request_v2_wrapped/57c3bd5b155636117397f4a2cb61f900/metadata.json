@@ -1,0 +1,1 @@
+{"duration": 0.2564859390258789, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT birth_year FROM authors WHERE name = 'Jeremy Paxman' AND series = 'The Victorians - Their Story In Pictures'\", 2]"}, "time": 1707662542.1827042}

@@ -1,0 +1,1 @@
+{"duration": 0.4353060722351074, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT COUNT(storeys) FROM castle WHERE owner = 'David Gregory' AND year_inherited = 1664\", 3]"}, "time": 1707662519.609279}

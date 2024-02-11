@@ -1,0 +1,1 @@
+{"duration": 0.25414299964904785, "input_args": {"**": "{}", "*": "['http://20.102.90.50:2017/wiki17_abstracts', \"SELECT year FROM FIFA_World_Cup WHERE location = 'Brazil' AND year < 1950 ORDER BY year DESC LIMIT 1;\", 3]"}, "time": 1707662523.421651}

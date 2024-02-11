@@ -1,0 +1,1 @@
+{"duration": 0.24118804931640625, "input_args": {"url": "'http://20.102.90.50:2017/wiki17_abstracts'", "query": "\"SELECT name, birthdate FROM mathematicians WHERE nationality = 'Russia' AND birthdate BETWEEN '1900-01-01' AND '2000-12-31' ORDER BY birthdate ASC LIMIT 2;\"", "k": "2"}, "time": 1707662600.552515}
