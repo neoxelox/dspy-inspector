@@ -44,6 +44,17 @@ def format(context, file="./dspy_inspector/"):
 
 
 @task()
+def clean(context):
+    """Clean notebook's cache."""
+
+    context.remove("./examples/assertion.log")
+    context.remove("./examples/openai_usage.log")
+    context.remove("./examples/cache", dir=True)
+    context.create("./examples/cache/library/.gitkeep")
+    context.create("./examples/cache/notebook/.gitkeep")
+
+
+@task()
 def build(context):
     """Build package."""
 

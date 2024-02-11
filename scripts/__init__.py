@@ -25,5 +25,6 @@ root.configure({
 root.add_task(tasks.lint)
 root.add_task(tasks.format)
 root.add_task(tasks.test)
+root.add_task(tasks.clean)
 root.add_task(tasks.build)
 root.add_task(tasks.publish)
