@@ -26,6 +26,20 @@ class _StrEnum(str, Enum):
         return str(self.value)
 
 
+class Color(_StrEnum):
+    emerald_content = "#10b981"
+    emerald_background = "#d1fae5"
+    amber_content = "#eab308"
+    amber_background = "#fef9c3"
+    rose_content = "#f43f5e"
+    rose_background = "#ffe4e6"
+    violet_content = "#8b5cf6"
+    violet_background = "#a78bfa"
+    stone_content = "#a8a29e"
+    stone_background = "#f5f5f4"
+    edge = "#1E73E9"
+
+
 @dataclass
 class Node:
     class Type(_StrEnum):
@@ -105,7 +119,7 @@ class PredictorNode(Node):
     def label(self) -> str:
         list_marker = self.variable.find("[")
         if list_marker > 0:
-            return f"{self.signature.name}\n{self.module}\n{self.variable[list_marker:]}"
+            return f"{self.signature.name}\n{self.module}{self.variable[list_marker:]}"
         return f"{self.signature.name}\n{self.module}"
 
     @property
@@ -139,7 +153,7 @@ class RetrieverNode(Node):
     def label(self) -> str:
         list_marker = self.variable.find("[")
         if list_marker > 0:
-            return f"{self.module}\n{self.variable[list_marker:]}"
+            return f"{self.module}{self.variable[list_marker:]}"
         return self.module
 
     @property
@@ -185,88 +199,108 @@ class Inspector:
         {
             "selector": "core",
             "style": {
-                "active-bg-color": "yellow",
-                "active-bg-opacity": 1,
-                "active-bg-size": "2em",
+                "active-bg-opacity": 0,
             },
         },
         {
             "selector": "node",
             "style": {
-                "width": "2em",
+                "width": "4em",
                 "height": "2em",
                 "shape": "round-rectangle",
-                "background-color": "blue",
+                "background-color": Color.rose_background,
+                "border-width": "0em",
+                "border-color": Color.rose_content,
                 "font-family": 'BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif',  # noqa: E501
-                "font-size": "1em",
+                "font-size": "0.75em",
+                "font-weight": "600",
                 "label": "data(label)",
-                "color": "purple",
-                "text-valign": "top",
-                "text-halign": "right",
-                "text-max-width": "30em",
+                "color": Color.rose_content,
+                "text-valign": "center",
+                "text-halign": "center",
+                "text-justification": "center",
+                "text-max-width": "99em",
                 "text-wrap": "wrap",
             },
         },
         {
             "selector": "node[type='parameter']",
             "style": {
-                "background-color": "grey",
+                "color": Color.stone_content,
+                "background-color": Color.stone_background,
+                "border-color": Color.stone_content,
             },
         },
         {
             "selector": "node[type='retriever']",
             "style": {
-                "background-color": "yellow",
+                "color": Color.amber_content,
+                "background-color": Color.amber_background,
+                "border-color": Color.amber_content,
             },
         },
         {
             "selector": "node[type='predictor']",
             "style": {
-                "background-color": "green",
+                "color": Color.emerald_content,
+                "background-color": Color.emerald_background,
+                "border-color": Color.emerald_content,
             },
         },
         {
-            "selector": "node[type='program']",
+            "selector": "node[type='program'][parent]",
             "style": {
-                "background-color": "#93c5fd",
+                "background-opacity": 0,
+                "color": Color.violet_content,
+                "border-width": "0.05em",
+                "border-style": "dashed",
+                "border-color": Color.violet_background,
+                "font-size": "1.25em",
+                "text-valign": "top",
+                "text-halign": "center",
+                "text-margin-y": "-1em",
+            },
+        },
+        {
+            "selector": "node[type='program'][^parent]",
+            "style": {
+                "background-opacity": 0,
+                "color": Color.violet_content,
+                "border-style": "dashed",
+                "border-color": Color.violet_background,
+                "font-size": "1.25em",
+                "text-valign": "top",
+                "text-halign": "center",
+                "text-margin-y": "-1em",
             },
         },
         {
             "selector": "node:active",
             "style": {
-                "overlay-color": "blue",
-                "overlay-opacity": 0.1,
-                "overlay-shape": "rectangle",
+                "overlay-opacity": 0,
+                "border-width": "0.15em",
             },
         },
         {
             "selector": "node.selected",
             "style": {
-                "overlay-color": "blue",
-                "overlay-opacity": 0.1,
-                "overlay-shape": "rectangle",
+                "overlay-opacity": 0,
+                "border-width": "0.15em",
             },
         },
         {
             "selector": "edge",
             "style": {
-                "curve-style": "bezier",
-                "width": "0.20em",
-                "line-color": "pink",
-                #  'arrow-scale': '0.75',
-                #  'source-arrow-shape': 'circle',
-                #  'source-arrow-color': 'red',
-                #  'source-endpoint': 'inside-to-node',
-                #  'source-distance-from-node': "0.80em",
-                #  'target-arrow-shape': 'circle',
-                #  'target-arrow-color': 'red',
-                #  'target-endpoint': 'inside-to-node',
-                #  'target-distance-from-node': "0.80em",
+                "curve-style": "unbundled-bezier",
+                "width": "0.1em",
+                "line-color": Color.edge,
                 "arrow-scale": "1",
-                "target-arrow-shape": "chevron",
-                "target-arrow-color": "red",
-                "target-endpoint": "outside-to-node",
-                "target-distance-from-node": "0",
+                "target-arrow-shape": "circle",
+                "target-arrow-color": Color.edge,
+                "target-arrow-width": "7em",
+                "target-endpoint": "50% 0% 90deg",
+                "source-endpoint": "50% 100% 90deg",
+                "z-index": 99,
             },
         },
         {
@@ -292,7 +326,7 @@ class Inspector:
 
         graph_widget = cytoscape.CytoscapeWidget()
         graph_widget.set_style(self._graph_widget_style)
-        graph_widget.set_layout(name="dagre", nodeSpacing=10, edgeLengthVal=10)
+        graph_widget.set_layout(name="dagre", directed=True, animate=True, nodeSpacing=10, edgeLengthVal=10)
 
         style_widget = widgets.HTML(self._panel_widget_style)
 
@@ -393,9 +427,9 @@ class Inspector:
 <div><dt>Signature</dt><dd>{predictor.signature.syntax}<br/><i>(From: {predictor.signature.name})</i></dd></div>
 <div><dt>Instructions</dt><dd>{html.escape(predictor.signature.instructions)}</dd></div>
 <div><dt>Module</dt><dd>{predictor.module}</dd></div>
-<div><dt>Prompt</dt><dd>{html.escape(predictor.prompt or 'None')}<b>{html.escape(predictor.completions[0]) if predictor.completions and len(predictor.completions) > 0 else ''}</b></dd></div>
+<div><dt>Result</dt><dd>{html.escape(predictor.prompt or 'None')}<b>{html.escape(predictor.completions[0]) if predictor.completions and len(predictor.completions) > 0 else ''}</b></dd></div>
 <div><dt>Tokens</dt><dd>Input: {predictor.usage.input_tokens} | Output: {predictor.usage.output_tokens}</dd></div>
-<div><dt>Demos</dt><dd>{[f'{html.escape(demo)}<br/><br/>' for demo in predictor.demos] if predictor.demos else 'None'}</dd></div>
+<div><dt>Demos</dt><dd>{'<br/><br/>'.join([html.escape(demo.toDict().__str__()) for demo in predictor.demos]) if predictor.demos else 'None'}</dd></div>
 <div><dt>Model</dt><dd>{predictor.model.name}</dd></div>
 <div><dt>Settings</dt><dd>{predictor.model.settings}</dd></div>
 """  # noqa: E501
@@ -429,6 +463,11 @@ class Inspector:
 
             if selected_node:
                 selected_node.cyto_instance.classes = ""
+
+                if selected_node.id == node.id:
+                    selected_node = None
+                    return
+
             selected_node = node
 
             # TODO: Center graph view on selected cytoscape node
@@ -508,7 +547,7 @@ class Inspector:
             pass
 
         def _update_program(program: ProgramNode) -> None:
-            pass
+            program.compiled = program.dspy_instance._compiled
 
         def _parse_parameter(attribute: str, parameter: object, parent: Node) -> Node:
             parameter_name = attribute
@@ -518,7 +557,7 @@ class Inspector:
             elif isinstance(parameter, dspy.OutputField):
                 parameter_direction = ParameterNode.Direction.OUTPUT
             elif isinstance(parameter, dsp.Type):
-                # TODO: how to get direction??
+                # TODO: How to get direction?
                 parameter_direction = ParameterNode.Direction.OUTPUT
 
             this = ParameterNode(
@@ -552,7 +591,7 @@ class Inspector:
                 elif isinstance(field, dspy.OutputField):
                     outputs.append(name)
                 elif isinstance(field, dsp.Type):
-                    # TODO: how to get direction??
+                    # TODO: How to get direction?
                     outputs.append(name)
 
             return f"{', '.join(inputs)} -> {', '.join(outputs)}"
@@ -599,7 +638,7 @@ class Inspector:
                 ),
                 prompt=None,
                 completions=None,
-                demos=None,
+                demos=module.demos,
                 metadata={},
                 dspy_instance=module,
                 cyto_instance=None,
@@ -658,7 +697,7 @@ class Inspector:
                     input_tokens=0,
                     output_tokens=0,
                 ),
-                passages=None,
+                passages=None,  # TODO: Can't get passages because dspy does not support it yet
                 metadata={},
                 dspy_instance=module,
                 cyto_instance=None,
