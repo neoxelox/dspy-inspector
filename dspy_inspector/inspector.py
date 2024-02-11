@@ -332,8 +332,6 @@ class Inspector:
     _panel_widget_style = f"<style>{_styles_css}</style>"
 
     def inspect(self, program: dspy.Program) -> widgets.Widget:
-        # TODO: The first load is very slow
-
         if inspect.isclass(program) and issubclass(program, dspy.Program):
             program = program()
 
