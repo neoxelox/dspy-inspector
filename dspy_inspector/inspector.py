@@ -205,8 +205,8 @@ class Inspector:
         {
             "selector": "node",
             "style": {
-                "width": "4em",
-                "height": "2em",
+                "width": "1em",
+                "height": "1em",
                 "shape": "round-rectangle",
                 "background-color": Color.rose_background,
                 "border-width": "0em",
@@ -221,6 +221,8 @@ class Inspector:
                 "text-justification": "center",
                 "text-max-width": "99em",
                 "text-wrap": "wrap",
+                "compound-sizing-wrt-labels": "include",
+                "padding": "10%",
             },
         },
         {
@@ -278,6 +280,13 @@ class Inspector:
             "selector": "node:active",
             "style": {
                 "overlay-opacity": 0,
+                "border-width": "0em",
+            },
+        },
+        {
+            "selector": "node:active[type='program']",
+            "style": {
+                "overlay-opacity": 0,
                 "border-width": "0.15em",
             },
         },
@@ -286,6 +295,13 @@ class Inspector:
             "style": {
                 "overlay-opacity": 0,
                 "border-width": "0.15em",
+            },
+        },
+        {
+            "selector": "node.selected[inner]",
+            "style": {
+                "overlay-opacity": 0,
+                "border-width": "0em",
             },
         },
         {
@@ -376,14 +392,32 @@ class Inspector:
             cytoscape_graph = {"nodes": [], "edges": []}
 
             for node in graph["nodes"]:
-                cytoscape_graph["nodes"].append(
-                    {
-                        "id": node.id,
-                        "type": node.type,
-                        "label": node.label,
-                        **({"parent": node.parent} if node.parent else {}),
-                    }
-                )
+                if node.type == Node.Type.PROGRAM:
+                    cytoscape_graph["nodes"].append(
+                        {
+                            "id": node.id,
+                            "type": node.type,
+                            "label": node.label,
+                            **({"parent": node.parent} if node.parent else {}),
+                        },
+                    )
+                else:  # A hack to make nodes as large as their labels
+                    cytoscape_graph["nodes"].extend(
+                        [
+                            {
+                                "id": node.id,
+                                "type": node.type,
+                                **({"parent": node.parent} if node.parent else {}),
+                            },
+                            {
+                                "id": f"{node.id}-inner",
+                                "type": node.type,
+                                "label": node.label,
+                                "parent": node.id,
+                                "inner": True,
+                            },
+                        ]
+                    )
 
             for edge in graph["edges"]:
                 cytoscape_graph["edges"].append(
@@ -496,7 +530,8 @@ class Inspector:
 """
 
         def _graph_widget_on_node_click(event: dict) -> None:
-            node = next(filter(lambda node: node.id == event["data"]["id"], graph["nodes"]), None)
+            node_id = event["data"]["id"].split("-inner")[0]
+            node = next(filter(lambda node: node.id == node_id, graph["nodes"]), None)
             if node:
                 _select_node(node)
 
