@@ -5,15 +5,14 @@ from dataclasses import dataclass
 from enum import Enum
 from functools import partial
 from pprint import pprint
-from typing import Callable, List, Optional, Tuple
 from threading import Timer
+from typing import Callable, List, Optional, Tuple
 
 import dsp
 import dspy
 import ipycytoscape as cytoscape
 import ipywidgets as widgets
 import tiktoken
-
 
 with open(os.path.join(os.path.dirname(__file__), "styles.css"), "r") as file:
     _styles_css = file.read()
@@ -904,7 +903,8 @@ class Inspector:
                     nodes.extend(predictor_nodes)
                     edges.extend(predictor_edges)
                 elif isinstance(module, dspy.Program):
-                    # TODO: how to get sub-programs?? Check: dspy.BaseModule.named_parameters func --> dont use named_parameter and instead do the whole logic here
+                    # TODO: how to get sub-programs?? Check: dspy.BaseModule.named_parameters func
+                    # --> don't use named_parameters, do the whole logic here instead
                     program_nodes, program_edges = _parse_program(attribute, module, this)
                     nodes.extend(program_nodes)
                     edges.extend(program_edges)
