@@ -23,6 +23,12 @@ class MultiHopRAG(dspy.Module):
         ...
 
 inspect(MultiHopRAG)
+
+# Or 👇
+
+program = MultiHopRAG()
+inspect(program) # Automatically updates
+program("How many storeys are in the castle that David Gregory inherited?")
 ```
 
 Check an example in the [`multi_hop_rag.ipynb`](examples/multi_hop_rag.ipynb) notebook.

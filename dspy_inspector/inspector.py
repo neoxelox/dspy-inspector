@@ -6,12 +6,14 @@ from enum import Enum
 from functools import partial
 from pprint import pprint
 from typing import Callable, List, Optional, Tuple
+from threading import Timer
 
 import dsp
 import dspy
 import ipycytoscape as cytoscape
 import ipywidgets as widgets
 import tiktoken
+
 
 with open(os.path.join(os.path.dirname(__file__), "styles.css"), "r") as file:
     _styles_css = file.read()
@@ -185,8 +187,19 @@ class ProgramNode(Node):
 
 @dataclass
 class Edge:
+    class Direction(_StrEnum):
+        INPUT = "input"
+        OUTPUT = "output"
+
+    class Endpoint(_StrEnum):
+        TOP = "top"
+        MID = "mid"
+        BOT = "bot"
+
     source: str
     target: str
+    direction: Direction
+    endpoint: Endpoint
 
 
 class Inspector:
@@ -260,6 +273,7 @@ class Inspector:
                 "text-valign": "top",
                 "text-halign": "center",
                 "text-margin-y": "-1em",
+                "padding": "2.5%",
             },
         },
         {
@@ -302,7 +316,7 @@ class Inspector:
                 "border-width": "0em",
             },
         },
-        {  # TODO: Make edges curve clockwise or anticlockwise to be always on the outside
+        {
             "selector": "edge",
             "style": {
                 "curve-style": "unbundled-bezier",
@@ -312,8 +326,11 @@ class Inspector:
                 "target-arrow-shape": "circle",
                 "target-arrow-color": Color.edge,
                 "target-arrow-width": "1em",
-                "source-endpoint": "180deg",
-                "target-endpoint": "0deg",
+                "source-endpoint": "90deg",
+                "target-endpoint": "270deg",
+                "edge-distances": "endpoints",
+                "control-point-distances": "-10 10",
+                "control-point-weights": "0.25 0.75",
             },
         },
         {
@@ -328,6 +345,60 @@ class Inspector:
                 "overlay-opacity": 0,
             },
         },
+        {
+            "selector": "edge[direction='input'][endpoint='top']",
+            "style": {
+                "source-endpoint": "90deg",
+                "target-endpoint": "315deg",
+                "control-point-distances": "-30",
+                "control-point-weights": "0.75",
+            },
+        },
+        {
+            "selector": "edge[direction='input'][endpoint='mid']",
+            "style": {
+                "source-endpoint": "90deg",
+                "target-endpoint": "270deg",
+                "control-point-distances": "-10 10",
+                "control-point-weights": "0.25 0.75",
+            },
+        },
+        {
+            "selector": "edge[direction='input'][endpoint='bot']",
+            "style": {
+                "source-endpoint": "90deg",
+                "target-endpoint": "225deg",
+                "control-point-distances": "30",
+                "control-point-weights": "0.75",
+            },
+        },
+        {
+            "selector": "edge[direction='output'][endpoint='top']",
+            "style": {
+                "source-endpoint": "45deg",
+                "target-endpoint": "270deg",
+                "control-point-distances": "-30",
+                "control-point-weights": "0.25",
+            },
+        },
+        {
+            "selector": "edge[direction='output'][endpoint='mid']",
+            "style": {
+                "source-endpoint": "90deg",
+                "target-endpoint": "270deg",
+                "control-point-distances": "-10 10",
+                "control-point-weights": "0.25 0.75",
+            },
+        },
+        {
+            "selector": "edge[direction='output'][endpoint='bot']",
+            "style": {
+                "source-endpoint": "135deg",
+                "target-endpoint": "270deg",
+                "control-point-distances": "30",
+                "control-point-weights": "0.25",
+            },
+        },
     ]
     _panel_widget_style = f"<style>{_styles_css}</style>"
 
@@ -338,12 +409,13 @@ class Inspector:
         if not isinstance(program, dspy.Program):
             raise TypeError(f"provided program of type {type(program)} is not a DSPy program")
 
+        # TODO: Maybe change nodes to a dict by id
         graph = {"nodes": [], "edges": []}
         selected_node = None
 
         graph_widget = cytoscape.CytoscapeWidget()
         graph_widget.set_style(self._graph_widget_style)
-        graph_widget.set_layout(name="dagre", directed=True, animate=True, nodeSpacing=10, edgeLengthVal=5)
+        graph_widget.set_layout(name="dagre", directed=True, animate=True, rankDir="LR", align=None)
 
         style_widget = widgets.HTML(self._panel_widget_style)
 
@@ -420,18 +492,21 @@ class Inspector:
                         ]
                     )
 
-            # A hack to make edges endpoints be outside of compound nodes without breaking the layout
             for edge in graph["edges"]:
                 cytoscape_graph["edges"].extend(
                     [
-                        {
+                        {  # A hack to make edges endpoints be outside of compound nodes without breaking the layout
                             "source": edge.source,
                             "target": edge.target,
+                            "direction": edge.direction,
+                            "endpoint": edge.endpoint,
                             "hidden": True,
                         },
                         {
                             "source": f"{edge.source}-outer",
                             "target": f"{edge.target}-outer",
+                            "direction": edge.direction,
+                            "endpoint": edge.endpoint,
                         },
                     ]
                 )
@@ -472,7 +547,7 @@ class Inspector:
 <div><dt>Signature</dt><dd>{predictor.signature.syntax}<br/><i>(From: {predictor.signature.name})</i></dd></div>
 <div><dt>Instructions</dt><dd>{html.escape(predictor.signature.instructions)}</dd></div>
 <div><dt>Module</dt><dd>{predictor.module}</dd></div>
-<div><dt>Result</dt><dd>{html.escape(predictor.prompt or 'None')}<b>{html.escape(predictor.completions[0]) if predictor.completions and len(predictor.completions) > 0 else ''}</b></dd></div>
+<div><dt>Result</dt><dd>{html.escape(predictor.prompt or 'None')}<b style="color: {Color.emerald_content};">{html.escape(predictor.completions[0]) if predictor.completions and len(predictor.completions) > 0 else ''}</b></dd></div>
 <div><dt>Tokens</dt><dd>Input: {predictor.usage.input_tokens} | Output: {predictor.usage.output_tokens}</dd></div>
 <div><dt>Demos</dt><dd>{'<br/><br/>'.join([html.escape(demo.toDict().__str__()) for demo in predictor.demos]) if predictor.demos else 'None'}</dd></div>
 <div><dt>Model</dt><dd>{predictor.model.name}</dd></div>
@@ -495,10 +570,38 @@ class Inspector:
 """  # noqa: E501
 
         def _update_graph() -> None:
+            # Find the best endpoint for each edge
+            for edge in graph["edges"]:
+                siblings = list(
+                    filter(
+                        lambda other: (
+                            other.target == edge.target
+                            if edge.direction == Edge.Direction.INPUT
+                            else other.source == edge.source
+                        ),
+                        graph["edges"],
+                    )
+                )
+
+                if len(siblings) > 1:
+                    for count, sibling in enumerate(siblings, start=1):
+                        if count == 1:
+                            sibling.endpoint = Edge.Endpoint.TOP
+                        elif count == len(siblings):
+                            sibling.endpoint = Edge.Endpoint.BOT
+                        else:
+                            sibling.endpoint = Edge.Endpoint.MID
+                else:
+                    edge.endpoint = Edge.Endpoint.MID
+
             if self.debug:
                 pprint(graph)
 
             _draw_graph_widget()
+
+            # Force a graph relayout after a new draw, but let some time for the ui to settle
+            for n in range(3):
+                Timer(1 + n, lambda: graph_widget.relayout()).start()
 
         def _select_node(node: Node, force: bool = False) -> None:
             nonlocal selected_node
@@ -699,6 +802,8 @@ class Inspector:
                         Edge(
                             source=parameter_node.id,
                             target=this.id,
+                            direction=Edge.Direction.INPUT,
+                            endpoint=Edge.Endpoint.MID,
                         )
                     )
                 elif parameter_node.direction == ParameterNode.Direction.OUTPUT:
@@ -706,6 +811,8 @@ class Inspector:
                         Edge(
                             source=this.id,
                             target=parameter_node.id,
+                            direction=Edge.Direction.OUTPUT,
+                            endpoint=Edge.Endpoint.MID,
                         )
                     )
 
@@ -797,7 +904,7 @@ class Inspector:
                     nodes.extend(predictor_nodes)
                     edges.extend(predictor_edges)
                 elif isinstance(module, dspy.Program):
-                    # TODO: how to get sub-programs?? Check: dspy.BaseModule.named_parameters func
+                    # TODO: how to get sub-programs?? Check: dspy.BaseModule.named_parameters func --> dont use named_parameter and instead do the whole logic here
                     program_nodes, program_edges = _parse_program(attribute, module, this)
                     nodes.extend(program_nodes)
                     edges.extend(program_edges)
@@ -808,7 +915,7 @@ class Inspector:
                 _update_parameters(this, parameters, nodes, edges)
                 _update_program(this)
                 if not parent:  # Only update graph once after root program finishes
-                    # _update_graph() # TODO: Fix graph layout breaks when updating it twice
+                    _update_graph()
                     if selected_node:
                         _select_node(selected_node, force=True)
                 return result
