@@ -168,8 +168,14 @@ class RetrieverNode(Node):
 
 @dataclass
 class ProgramNode(Node):
+    @dataclass
+    class Usage:
+        input_tokens: int
+        output_tokens: int
+
     program: str
     compiled: bool
+    usage: Usage
 
     @property
     def label(self) -> str:
@@ -566,6 +572,7 @@ class Inspector:
             return f"""
 <div><dt>Compiled</dt><dd>{program.compiled}</dd></div>
 <div><dt>Subprogram</dt><dd>{program.parent is not None}</dd></div>
+<div><dt>Tokens</dt><dd>Input: {program.usage.input_tokens} | Output: {program.usage.output_tokens}</dd></div>
 """  # noqa: E501
 
         def _update_graph() -> None:
@@ -674,7 +681,10 @@ class Inspector:
                         text=parameter_value, tokens=len(self.tokenizer(parameter_value))
                     )
 
-                    # TODO: Create edges between parameter's traversed nodes
+                else:
+                    pass  # TODO: Create node for new parameter's
+
+                # TODO: Create edges between parameter's traversed nodes
 
         def _update_predictor(predictor: PredictorNode) -> None:
             # TODO: This probably won't work if model calls are done in parallel
@@ -694,8 +704,27 @@ class Inspector:
 
             pass
 
+        def _get_total_tokens_for_program(program: ProgramNode) -> Tuple[int, int]:
+            total_input_tokens = 0
+            total_output_tokens = 0
+
+            for node in filter(lambda node: node.parent == program.id, graph["nodes"]):
+                if isinstance(node, PredictorNode):
+                    total_input_tokens += node.usage.input_tokens
+                    total_output_tokens += node.usage.output_tokens
+                elif isinstance(node, RetrieverNode):
+                    total_input_tokens += node.usage.input_tokens
+                    total_output_tokens += node.usage.output_tokens
+                elif isinstance(node, ProgramNode):
+                    input_tokens, output_tokens = _get_total_tokens_for_program(node)
+                    total_input_tokens += input_tokens
+                    total_output_tokens += output_tokens
+
+            return total_input_tokens, total_output_tokens
+
         def _update_program(program: ProgramNode) -> None:
             program.compiled = program.dspy_instance._compiled
+            program.usage.input_tokens, program.usage.output_tokens = _get_total_tokens_for_program(program)
 
         def _parse_parameter(attribute: str, parameter: object, parent: Node) -> Node:
             parameter_name = attribute
@@ -856,11 +885,10 @@ class Inspector:
             )
             nodes.append(this)
 
-            # TODO: Get (forward) parameters
-
             def wrap_forward(*args, **kwargs):
                 result = module_forward(*args, **kwargs)
-                parameters = list(kwargs.items()) + result.items()
+                # Get query parameter manually as it is not a kwarg
+                parameters = [("query", args[0])] + list(kwargs.items()) + result.items()
                 _update_parameters(this, parameters, nodes, edges)
                 _update_retriever(this)
                 return result
@@ -885,6 +913,7 @@ class Inspector:
                 type=Node.Type.PROGRAM,
                 program=program_name,
                 compiled=program._compiled,
+                usage=ProgramNode.Usage(input_tokens=0, output_tokens=0),
                 metadata={},
                 dspy_instance=program,
                 cyto_instance=None,
