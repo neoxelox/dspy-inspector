@@ -274,23 +274,12 @@ class Inspector:
                 "color": Color.violet_content,
                 "border-style": "dashed",
                 "border-color": Color.violet_background,
+                "border-width": "0.05em",
                 "font-size": "1.25em",
                 "text-valign": "top",
                 "text-halign": "center",
                 "text-margin-y": "-1em",
                 "padding": "2.5%",
-            },
-        },
-        {
-            "selector": "node[type='program'][parent]",
-            "style": {
-                "border-width": "0.05em",
-            },
-        },
-        {
-            "selector": "node[type='program'][^parent]",
-            "style": {
-                "border-width": "0em",
             },
         },
         {
@@ -929,6 +918,32 @@ class Inspector:
 
             return nodes, edges
 
+        def _get_program_modules(program: object) -> List[Tuple[str, object]]:
+            modules = []
+
+            # Following almost the same logic as in dspy.BaseModule.named_parameters
+
+            def append_module(attr: str, obj: object) -> None:
+                if isinstance(obj, dspy.Retrieve) or isinstance(obj, dspy.Predict) or isinstance(obj, dspy.Program):
+                    modules.append((attr, obj))
+
+            visited = set()
+            for attr, obj in program.__dict__.items():
+                if id(obj) in visited:
+                    continue
+                visited.add(id(obj))
+
+                if isinstance(obj, (list, tuple)):
+                    for idx, item in enumerate(obj):
+                        append_module(f"{attr}[{idx}]", item)
+                elif isinstance(obj, dict):
+                    for key, item in obj.items():
+                        append_module(f"{attr}['{key}']", item)
+                else:
+                    append_module(attr, obj)
+
+            return modules
+
         def _parse_program(
             attribute: str, program: object, parent: Optional[Node] = None
         ) -> Tuple[List[Node], List[Edge]]:
@@ -954,7 +969,8 @@ class Inspector:
 
             # TODO: Get (forward) parameters
 
-            for attribute, module in program.named_parameters():
+            modules = _get_program_modules(program)
+            for attribute, module in modules:
                 if isinstance(module, dspy.Retrieve):
                     retriever_nodes, retriever_edges = _parse_retriever(attribute, module, this)
                     nodes.extend(retriever_nodes)
@@ -964,8 +980,6 @@ class Inspector:
                     nodes.extend(predictor_nodes)
                     edges.extend(predictor_edges)
                 elif isinstance(module, dspy.Program):
-                    # TODO: how to get sub-programs?? Check: dspy.BaseModule.named_parameters func
-                    # --> don't use named_parameters, do the whole logic here instead
                     program_nodes, program_edges = _parse_program(attribute, module, this)
                     nodes.extend(program_nodes)
                     edges.extend(program_edges)

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dspy-inspector"
-version = "0.4.0"
+version = "0.5.0"
 description = "DSPy program/pipeline inspector widget for Jupyter/VSCode Notebooks."
 authors = ["Alex Rodriguez <me@arn.sh>"]
 maintainers = ["Alex Rodriguez <me@arn.sh>"]
@@ -29,6 +29,7 @@ jupyterlab-widgets = "3.0.9"
 dspy-ai = "2.1.9"
 tiktoken = "0.5.2"
 ipycytoscape = "^1.3.3"
+orjson = "^3.9.13"
 
 [tool.poetry.dev-dependencies]
 autoflake = { git = "https://github.com/neoxelox/autoflake.git" }
