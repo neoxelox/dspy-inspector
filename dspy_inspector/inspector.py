@@ -148,7 +148,6 @@ class RetrieverNode(Node):
     module: str
     model: Model
     usage: Usage
-    passages: Optional[List[str]]
 
     @property
     def label(self) -> str:
@@ -562,7 +561,6 @@ class Inspector:
         def _draw_retriever_panel_info_widget(retriever: RetrieverNode) -> str:
             return f"""
 <div><dt>Module</dt><dd>{retriever.module}</dd></div>
-<div><dt>Passages</dt><dd>{[f'{html.escape(passage)}<br/><br/>' for passage in retriever.passages] if retriever.passages else 'None'}</dd></div>
 <div><dt>Tokens</dt><dd>Input: {retriever.usage.input_tokens} | Output: {retriever.usage.output_tokens}</dd></div>
 <div><dt>Model</dt><dd>{retriever.model.name}</dd></div>
 <div><dt>Settings</dt><dd>{retriever.model.settings}</dd></div>
@@ -673,16 +671,15 @@ class Inspector:
         def _update_parameters(this: Node, parameters: list, nodes: List[Node], edges: List[Edge]) -> None:
             for parameter, parameter_value in parameters:
                 parameter_node = next(filter(lambda node: node.id == f"{this.id}.{parameter}", nodes), None)
-                if parameter_node:
-                    if parameter_node.format:
-                        parameter_value = parameter_node.format(parameter_value)
+                if not parameter_node:
+                    continue
 
-                    parameter_node.value = ParameterNode.Value(
-                        text=parameter_value, tokens=len(self.tokenizer(parameter_value))
-                    )
+                if parameter_node.format:
+                    parameter_value = parameter_node.format(parameter_value)
 
-                else:
-                    pass  # TODO: Create node for new parameter's
+                parameter_node.value = ParameterNode.Value(
+                    text=parameter_value, tokens=len(self.tokenizer(parameter_value))
+                )
 
                 # TODO: Create edges between parameter's traversed nodes
 
@@ -700,7 +697,6 @@ class Inspector:
 
         def _update_retriever(retriever: RetrieverNode) -> None:
             # TODO: Can't update usage because dspy does not support it yet
-            # TODO: Can't update passages because dspy does not support it yet
 
             pass
 
@@ -870,20 +866,48 @@ class Inspector:
                 type=Node.Type.RETRIEVER,
                 module=module_name,
                 model=RetrieverNode.Model(
-                    name="unknown",  # TODO: Cannot get module.kwargs["model"] because dspy does not support it yet
-                    settings={},  # TODO: Cannot get module.copy().kwargs because dspy does not support it yet
+                    name=module_model.__class__.__name__,  # TODO: Cannot get module_model.kwargs["model"] because dspy does not support it yet
+                    settings={},  # TODO: Cannot get module_model.copy().kwargs because dspy does not support it yet
                     instance=module_model,
                 ),
                 usage=RetrieverNode.Usage(
                     input_tokens=0,
                     output_tokens=0,
                 ),
-                passages=None,  # TODO: Can't get passages because dspy does not support it yet
                 metadata={},
                 dspy_instance=module,
                 cyto_instance=None,
             )
             nodes.append(this)
+
+            # Create signature manually as retrievers don't have it
+            class RetrieverSignature(dspy.Signature):
+                """Take the given search query and return one or more potentially relevant passages from a corpus."""
+
+                query = dspy.InputField()
+                passages = dspy.OutputField()
+
+            for attribute, parameter in RetrieverSignature.kwargs.items():
+                parameter_node = _parse_parameter(attribute, parameter, this)
+                nodes.append(parameter_node)
+                if parameter_node.direction == ParameterNode.Direction.INPUT:
+                    edges.append(
+                        Edge(
+                            source=parameter_node.id,
+                            target=this.id,
+                            direction=Edge.Direction.INPUT,
+                            endpoint=Edge.Endpoint.MID,
+                        )
+                    )
+                elif parameter_node.direction == ParameterNode.Direction.OUTPUT:
+                    edges.append(
+                        Edge(
+                            source=this.id,
+                            target=parameter_node.id,
+                            direction=Edge.Direction.OUTPUT,
+                            endpoint=Edge.Endpoint.MID,
+                        )
+                    )
 
             def wrap_forward(*args, **kwargs):
                 result = module_forward(*args, **kwargs)
