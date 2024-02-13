@@ -12,6 +12,7 @@ import dsp
 import dspy
 import ipycytoscape as cytoscape
 import ipywidgets as widgets
+import orjson
 import tiktoken
 
 with open(os.path.join(os.path.dirname(__file__), "styles.css"), "r") as file:
@@ -657,13 +658,20 @@ class Inspector:
             panel_action_executor_widget.value = ""
 
             # TODO: Export graph in PNG
-            panel_action_executor_widget.value = _RunHTMLScript("""console.log('export not implemented');""")
+            panel_action_executor_widget.value = _RunHTMLScript("""alert('Export not implemented');""")
 
         def _save_button_widget_on_click(*args, **kwargs) -> None:
             panel_action_executor_widget.value = ""
 
-            # TODO: Save graph in json
-            panel_action_executor_widget.value = _RunHTMLScript("""console.log('save not implemented');""")
+            filepath = os.path.abspath(f"./{graph['nodes'][0].program}.json")
+            with open(filepath, "w") as file:
+                file.write(
+                    orjson.dumps(
+                        graph, default=lambda o: None, option=orjson.OPT_SERIALIZE_DATACLASS | orjson.OPT_INDENT_2
+                    ).decode()
+                )
+
+            panel_action_executor_widget.value = _RunHTMLScript(f"""alert('Saved graph to {filepath}');""")
 
         def _reset_button_widget_on_click(*args, **kwargs) -> None:
             graph_widget.relayout()
@@ -866,7 +874,7 @@ class Inspector:
                 type=Node.Type.RETRIEVER,
                 module=module_name,
                 model=RetrieverNode.Model(
-                    name=module_model.__class__.__name__,  # TODO: Cannot get module_model.kwargs["model"] because dspy does not support it yet
+                    name=module_model.__class__.__name__,  # TODO: Cannot get module_model.kwargs["model"] because dspy does not support it yet # noqa: E501
                     settings={},  # TODO: Cannot get module_model.copy().kwargs because dspy does not support it yet
                     instance=module_model,
                 ),
