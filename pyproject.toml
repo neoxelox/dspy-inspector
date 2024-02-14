@@ -24,11 +24,11 @@ keywords = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
-ipywidgets = "8.1.1"
-jupyterlab-widgets = "3.0.9"
-dspy-ai = "2.1.9"
-tiktoken = "0.5.2"
-ipycytoscape = "^1.3.3"
+ipywidgets = "^8.1.1"
+jupyterlab-widgets = "^3.0.9"
+dspy-ai = "2.1.10"
+tiktoken = "^0.5.2"
+ipycytoscape = "1.3.3"
 orjson = "^3.9.13"
 
 [tool.poetry.dev-dependencies]
@@ -42,8 +42,8 @@ flakehell = "0.9.0"
 isort = "5.13.2"
 mypy = "0.910"
 pylint = "2.10.2"
-pytest = "6.2.4"
-pytest-xdist = "2.3.0"
+pytest = "8.0.0"
+pytest-xdist = "3.5.0"
 superinvoke = "1.0.5"
 notebook = "7.0.7"
 python-dotenv = "1.0.1"
