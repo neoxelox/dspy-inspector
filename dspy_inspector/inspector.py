@@ -19,8 +19,12 @@ with open(os.path.join(os.path.dirname(__file__), "styles.css"), "r") as file:
     _styles_css = file.read()
 
 
-def _RunHTMLScript(script: str) -> str:
+def _run_html_script(script: str) -> str:
     return f"""<style onload="(function(){{{script}}})();"></style>"""
+
+
+def _escape_html_text(text: str) -> str:
+    return html.escape(text).replace("\n", "<br/>")
 
 
 class _StrEnum(str, Enum):
@@ -114,7 +118,7 @@ class PredictorNode(Node):
     model: Model
     usage: Usage
     prompt: Optional[str]
-    completions: Optional[List[str]]
+    completion: Optional[str]
     demos: Optional[List[str]]
 
     @property
@@ -529,21 +533,22 @@ class Inspector:
         def _draw_parameter_panel_info_widget(parameter: ParameterNode) -> str:
             return f"""
 <div><dt>Direction</dt><dd>{parameter.direction}</dd></div>
-<div><dt>Prefix</dt><dd>{html.escape(parameter.prefix)}</dd></div>
-<div><dt>Description</dt><dd>{html.escape(parameter.description)}</dd></div>
+<div><dt>Prefix</dt><dd>{_escape_html_text(parameter.prefix)}</dd></div>
+<div><dt>Description</dt><dd>{_escape_html_text(parameter.description)}</dd></div>
 <div><dt>Format</dt><dd>{parameter.format.__name__ if parameter.format else 'None'}</dd></div>
-<div><dt>Value</dt><dd>{html.escape(parameter.value.text) if parameter.value else 'None'}</dd></div>
+<div><dt>Value</dt><dd>{_escape_html_text(parameter.value.text) if parameter.value else 'None'}</dd></div>
 <div><dt>Tokens</dt><dd>{parameter.value.tokens if parameter.value else '0'}</dd></div>
 """  # noqa: E501
 
         def _draw_predictor_panel_info_widget(predictor: PredictorNode) -> str:
+            # TODO: Put demos inside the Result field and add a button to show/hide them
             return f"""
 <div><dt>Signature</dt><dd>{predictor.signature.syntax}<br/><i>(From: {predictor.signature.name})</i></dd></div>
-<div><dt>Instructions</dt><dd>{html.escape(predictor.signature.instructions)}</dd></div>
+<div><dt>Instructions</dt><dd>{_escape_html_text(predictor.signature.instructions)}</dd></div>
 <div><dt>Module</dt><dd>{predictor.module}</dd></div>
-<div><dt>Result</dt><dd>{html.escape(predictor.prompt or 'None')}<b style="color: {Color.emerald_content};">{html.escape(predictor.completions[0]) if predictor.completions and len(predictor.completions) > 0 else ''}</b></dd></div>
+<div><dt>Result</dt><dd>{_escape_html_text(predictor.prompt or 'None')}<b style="color: {Color.emerald_content};">{_escape_html_text(predictor.completion or '')}</b></dd></div>
 <div><dt>Tokens</dt><dd>Input: {predictor.usage.input_tokens} | Output: {predictor.usage.output_tokens}</dd></div>
-<div><dt>Demos</dt><dd>{'<br/><br/>'.join([html.escape(demo.toDict().__str__()) for demo in predictor.demos]) if predictor.demos else 'None'}</dd></div>
+<div><dt>Demos</dt><dd>{'<br/><br/>'.join([_escape_html_text(demo.toDict().__str__()) for demo in predictor.demos]) if predictor.demos else 'None'}</dd></div>
 <div><dt>Model</dt><dd>{predictor.model.name}</dd></div>
 <div><dt>Settings</dt><dd>{predictor.model.settings}</dd></div>
 """  # noqa: E501
@@ -647,7 +652,7 @@ class Inspector:
             panel_action_executor_widget.value = ""
 
             # TODO: Export graph in PNG
-            panel_action_executor_widget.value = _RunHTMLScript("""alert('Export not implemented');""")
+            panel_action_executor_widget.value = _run_html_script("""alert('Export not implemented');""")
 
         def _save_button_widget_on_click(*args, **kwargs) -> None:
             panel_action_executor_widget.value = ""
@@ -660,7 +665,7 @@ class Inspector:
                     ).decode()
                 )
 
-            panel_action_executor_widget.value = _RunHTMLScript(f"""alert('Saved graph to {filepath}');""")
+            panel_action_executor_widget.value = _run_html_script(f"""alert('Saved graph to {filepath}');""")
 
         def _reset_button_widget_on_click(*args, **kwargs) -> None:
             graph_widget.relayout()
@@ -684,11 +689,13 @@ class Inspector:
             # TODO: This probably won't work if model calls are done in parallel
             call = predictor.model.instance.history[-1]
 
+            # TODO: Fix, this is model-dependant
+
             predictor.usage.input_tokens = call["response"]["usage"]["prompt_tokens"]
             predictor.usage.output_tokens = call["response"]["usage"]["completion_tokens"]
 
             predictor.prompt = call["prompt"]
-            predictor.completions = [choice["text"] for choice in call["response"]["choices"]]
+            predictor.completion = call["response"]["choices"][0]["text"]
 
             predictor.demos = predictor.dspy_instance.demos
 
@@ -807,7 +814,7 @@ class Inspector:
                     output_tokens=0,
                 ),
                 prompt=None,
-                completions=None,
+                completion=None,
                 demos=module.demos,
                 metadata={},
                 dspy_instance=module,
