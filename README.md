@@ -2,6 +2,8 @@
 
 **`DSPy program/pipeline inspector widget for Jupyter/VSCode Notebooks.`** 🔭
 
+> _**Note**: DSPy is going through a big refactor at this moment. Updates in the parsing logic are going to be halted in the meantime._
+
 ![Demo](demo.gif)
 
 > Dark theme is coming soon™.

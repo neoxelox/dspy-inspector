@@ -543,7 +543,7 @@ class Inspector:
         def _draw_predictor_panel_info_widget(predictor: PredictorNode) -> str:
             # TODO: Put demos inside the Result field and add a button to show/hide them
             return f"""
-<div><dt>Signature</dt><dd>{predictor.signature.syntax}<br/><i>(From: {predictor.signature.name})</i></dd></div>
+<div><dt>Signature</dt><dd>{predictor.signature.syntax}{f'<br/><i>(From: {predictor.signature.name})</i>' if predictor.signature.name != predictor.signature.syntax else ''}</dd></div>
 <div><dt>Instructions</dt><dd>{_escape_html_text(predictor.signature.instructions)}</dd></div>
 <div><dt>Module</dt><dd>{predictor.module}</dd></div>
 <div><dt>Result</dt><dd>{_escape_html_text(predictor.prompt or 'None')}<b style="color: {Color.emerald_content};">{_escape_html_text(predictor.completion or '')}</b></dd></div>
@@ -730,11 +730,10 @@ class Inspector:
             parameter_name = attribute
             if isinstance(parameter, dspy.InputField):
                 parameter_direction = ParameterNode.Direction.INPUT
-                # dada
             elif isinstance(parameter, dspy.OutputField):
                 parameter_direction = ParameterNode.Direction.OUTPUT
             elif isinstance(parameter, dsp.Type):
-                # TODO: How to get direction?
+                # TODO: How to get direction? --> Take into account rationale/hint/action/thought cases (ChainOfThought/ReAct)
                 parameter_direction = ParameterNode.Direction.OUTPUT
 
             this = ParameterNode(
@@ -768,7 +767,7 @@ class Inspector:
                 elif isinstance(field, dspy.OutputField):
                     outputs.append(name)
                 elif isinstance(field, dsp.Type):
-                    # TODO: How to get direction?
+                    # TODO: How to get direction? --> Take into account rationale/hint/action/thought cases (ChainOfThought/ReAct)
                     outputs.append(name)
 
             return f"{', '.join(inputs)} -> {', '.join(outputs)}"
@@ -789,7 +788,9 @@ class Inspector:
                 module_signature_name = module_signature_syntax
             module_signature_instructions = module.signature.instructions
             module_signature_parameters = module.signature.kwargs
-            if hasattr(module, "extended_signature"):
+            if hasattr(
+                module, "extended_signature"
+            ):  # TODO: Take into account .signature1 / .signature2 cases (ChainOfThoughtWithHint)
                 module_signature_syntax = _build_syntax_from_template(module.extended_signature)
                 module_signature_parameters = module.extended_signature.kwargs
 

@@ -42,8 +42,11 @@ $light-color: #e7e5e4;
   h4,
   h5,
   p {
-    margin: 0em !important;
-    padding: 0em !important;
+    margin: 0em;
+    padding: 0em;
+    line-height: 1.5;
+    font-weight: 400;
+    color: #032830;
   }
 
   /* VERSION TAG */
@@ -203,7 +206,7 @@ $light-color: #e7e5e4;
             border-top: 1px solid $light-color;
             padding: 1.5em 0.75em;
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 1em;
 
             &:first-child {
@@ -232,7 +235,7 @@ $light-color: #e7e5e4;
               font-weight: 400;
               line-height: 1.5em;
               color: $content-color;
-              grid-column: span 2 / span 2;
+              grid-column: span 3 / span 3;
             }
           }
         }

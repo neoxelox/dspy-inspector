@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dspy-inspector"
-version = "0.6.0"
+version = "0.7.0"
 description = "DSPy program/pipeline inspector widget for Jupyter/VSCode Notebooks."
 authors = ["Alex Rodriguez <me@arn.sh>"]
 maintainers = ["Alex Rodriguez <me@arn.sh>"]

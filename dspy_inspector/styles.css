@@ -31,8 +31,11 @@
 .dspy-inspector h4,
 .dspy-inspector h5,
 .dspy-inspector p {
-  margin: 0em !important;
-  padding: 0em !important;
+  margin: 0em;
+  padding: 0em;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #032830;
 }
 .dspy-inspector::after {
   position: absolute;
@@ -169,7 +172,7 @@
   border-top: 1px solid #e7e5e4;
   padding: 1.5em 0.75em;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1em;
 }
 .dspy-inspector-panel-info-table dl div:first-child {
@@ -194,7 +197,7 @@
   font-weight: 400;
   line-height: 1.5em;
   color: #032830;
-  grid-column: span 2/span 2;
+  grid-column: span 3/span 3;
 }
 .dspy-inspector-panel-actions {
   width: -moz-fit-content !important;
